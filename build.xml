@@ -19,8 +19,12 @@
 						</replace>
 					</sequential>
 				</for>
-				<basename property="filename" file="${dir.application}/@{file}" suffix=".sample"/>
-				<move file="${dir.application}/@{file}" tofile="filename" />
+				<fileset dir="${dir.application}" includes="*/*.sample" />
+				<filtermapper>
+					<replacestring from=".sample" to=""/>
+				</filtermapper>
+				<!--<basename property="filename" file="${dir.application}/@{file}" suffix=".sample"/>
+				<move file="${dir.application}/@{file}" tofile="filename" />-->
 			</sequential>
 		</for>
 	</target>
