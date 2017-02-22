@@ -19,10 +19,10 @@
 						</replace>
 					</sequential>
 				</for>
-				<fileset dir="${dir.application}" includes="*/*.sample" />
-				<filtermapper>
-					<replacestring from=".sample" to=""/>
-				</filtermapper>
+				<move todir="${dir.application}/config" includeemptydirs="false">
+					<fileset dir="${dir.application}/config"/>
+					<mapper type="glob" from="*.sample" to="*"/>
+				</move>
 				<!--<basename property="filename" file="${dir.application}/@{file}" suffix=".sample"/>
 				<move file="${dir.application}/@{file}" tofile="filename" />-->
 			</sequential>
