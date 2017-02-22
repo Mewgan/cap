@@ -38,30 +38,13 @@
 		<attribute name="dir" />
 		<attribute name="uri" />
 		<sequential>
-			<condition property="is_git_not_cloned">
-				<not>
-					<available file="@{dir}/.git/" type="dir" />
-				</not>
-			</condition>
-
-			<if>
-				<equals arg1="${is_git_not_cloned}" arg2="true" />
-				<then>
-					<echo message="git-clone-checkout" />
-					<git:git directory="@{dir}" settingsRef="git.settings">
-						<clone uri="@{uri}" cloneallbranches="false" branchnames="origin/${git.branch}" branchtotrack="origin/${git.branch}" nocheckout="true" clonesubmodules="false" />
-					</git:git>
-					<git:git directory="@{dir}" settingsRef="git.settings">
-						<fetch uri="@{uri}" />
-						<checkout branchname="origin/${git.branch}" />
-					</git:git>
-				</then>
-				<else>
-					<exec executable="git" dir="@{dir}" failonerror="true">
-						<arg value="pull" />
-					</exec>
-				</else>
-			</if>
+			<git:git directory="@{dir}" settingsRef="git.settings">
+				<clone uri="@{uri}" cloneallbranches="false" branchnames="origin/${git.branch}" branchtotrack="origin/${git.branch}" nocheckout="true" clonesubmodules="false" />
+			</git:git>
+			<git:git directory="@{dir}" settingsRef="git.settings">
+				<fetch uri="@{uri}" />
+				<checkout branchname="origin/${git.branch}" />
+			</git:git>
 		</sequential>
 	</macrodef>
 
