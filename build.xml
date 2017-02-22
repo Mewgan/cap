@@ -1,7 +1,7 @@
 ﻿<project name="Installer une application via capistrano" basedir="." xmlns:git="antlib:com.rimerosolutions.ant.git">
 
 	<target name="deploy" depends="config">
-		<exec executable="cap" dir="." failonerror="true">
+		<exec executable="cap" dir="${dir.application}" failonerror="true">
 			<arg value="${CAP_FILE}" />
 			<arg value="deploy" />
 		</exec>
@@ -23,8 +23,6 @@
 					<fileset dir="${dir.application}/config"/>
 					<mapper type="glob" from="*.sample" to="*"/>
 				</move>
-				<!--<basename property="filename" file="${dir.application}/@{file}" suffix=".sample"/>
-				<move file="${dir.application}/@{file}" tofile="filename" />-->
 			</sequential>
 		</for>
 	</target>
