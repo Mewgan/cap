@@ -19,8 +19,8 @@
 						</replace>
 					</sequential>
 				</for>
-				<basename property="filename" file="${file}" suffix=".sample"/>
-				<move file="${file}" tofile="filename" />
+				<basename property="filename" file="${dir.application}/@{file}" suffix=".sample"/>
+				<move file="${dir.application}/@{file}" tofile="filename" />
 			</sequential>
 		</for>
 	</target>
@@ -56,11 +56,11 @@
 						<checkout branchname="origin/${git.branch}" />
 					</git:git>
 				</then>
-				<else>
+				<!--<else>
 					<exec executable="git" dir="@{dir}" failonerror="true">
 						<arg value="pull" />
 					</exec>
-				</else>
+				</else>-->
 			</if>
 		</sequential>
 	</macrodef>
