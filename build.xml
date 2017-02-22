@@ -1,0 +1,84 @@
+﻿<project name="Installer une application via capistrano" basedir="." xmlns:git="antlib:com.rimerosolutions.ant.git">
+
+	<target name="deploy" depends="config">
+		<exec executable="cap" dir="." failonerror="true">
+			<arg value="${CAP_FILE}" />
+			<arg value="deploy" />
+		</exec>
+	</target>
+
+	<target name="config" depends="install-application">
+		<for param="file" list="${list_file_to_configure}" delimiter=",">
+			<sequential>
+				<echo message="Fichier a configurer : @{file}" />
+				<for param="prop" list="${list_prop_to_configure}" delimiter=",">
+					<sequential>
+						<echo message="@{prop}" />
+						<replace file="${dir.application}/@{file}" value="">
+							<replacefilter token="{{@{prop}}}" value="${@{prop}}" />
+						</replace>
+					</sequential>
+				</for>
+				<basename property="filename" file="$(file}" suffix=".sample"/>
+				<rename src="${file}" dest="filename" />
+			</sequential>
+		</for>
+	</target>
+
+	<target name="install-application" depends="init">
+		<git-clone dir="${dir.application}" uri="${GIT_PROJECT_URI}" />
+	</target>
+
+	<target name="init">
+		<mkdir dir="${dir.application}" />
+		<git:settings refId="git.settings" username="${git.username}" password="${git.password}" name="${git.name}" email="${git.email}" />
+	</target>
+
+	<macrodef name="git-clone">
+		<attribute name="dir" />
+		<attribute name="uri" />
+		<sequential>
+			<condition property="is_git_not_cloned">
+				<not>
+					<available file="@{dir}/.git/" type="dir" />
+				</not>
+			</condition>
+
+			<if>
+				<equals arg1="${is_git_not_cloned}" arg2="true" />
+				<then>
+					<echo message="git-clone-checkout" />
+					<git:git directory="@{dir}" settingsRef="git.settings">
+						<clone uri="@{uri}" cloneallbranches="false" branchnames="origin/${git.branch}" branchtotrack="origin/${git.branch}" nocheckout="true" clonesubmodules="false" />
+					</git:git>
+					<git:git directory="@{dir}" settingsRef="git.settings">
+						<fetch uri="@{uri}" />
+						<checkout branchname="origin/${git.branch}" />
+					</git:git>
+				</then>
+				<else>
+					<exec executable="git" dir="@{dir}" failonerror="true">
+						<arg value="pull" />
+					</exec>
+				</else>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<typedef resource="net/sf/antcontrib/antlib.xml">
+		<classpath>
+			<fileset dir="lib">
+				<include name="ant-contrib*.jar" />
+			</fileset>
+		</classpath>
+	</typedef>
+	<taskdef uri="antlib:com.rimerosolutions.ant.git" resource="com/rimerosolutions/ant/git/jgit-ant-lib.xml">
+		<classpath>
+			<fileset dir="lib">
+				<include name="*.jar" />
+			</fileset>
+		</classpath>
+	</taskdef>
+	<property file="install_auto.properties" />
+
+</project>
