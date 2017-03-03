@@ -1,7 +1,7 @@
 ﻿<project name="Installer une application via capistrano" basedir="." xmlns:git="antlib:com.rimerosolutions.ant.git">
 
 	<target name="deploy" depends="config">
-		<exec executable="cap" dir="${dir.application}" failonerror="true">
+		<exec executable="sudo cap" dir="${dir.application}" failonerror="true">
 			<arg value="${CAP_FILE}" />
 			<arg value="deploy" />
 		</exec>
