@@ -28,7 +28,7 @@
 	</target>
 
 	<target name="install-application" depends="init">
-		<git-clone dir="${dir.application}" uri="${GIT_PROJECT_URI}" />
+		<git-clone dir="${dir.application}" uri="${git.public.uri}" />
 	</target>
 
 	<target name="init">
@@ -61,6 +61,8 @@
 				<else>
 					<exec executable="git" dir="@{dir}" failonerror="true">
 						<arg value="pull" />
+						<arg value="origin" />
+						<arg value="master" />
 					</exec>
 				</else>
 			</if>
